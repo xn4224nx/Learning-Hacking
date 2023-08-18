@@ -1,3 +1,7 @@
+# Ignore all files without extentions (linux binaries) 
+*
+!*.*
+
 # Prerequisites
 *.d
 
