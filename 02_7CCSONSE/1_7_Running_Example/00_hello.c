@@ -1,10 +1,10 @@
 void foo(int n) {
 
-    printf("Argument: %d\n", n);
+    printf("argument: %d;\n", n);
 }
 
-int main()
-{
+int main() {
+
 	foo(10);
 	return 0;
 }
