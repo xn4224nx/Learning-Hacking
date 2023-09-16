@@ -1,190 +1,282 @@
 
-./04_vuln2:     file format elf64-x86-64
+./04_vuln2:     file format elf32-i386
 
 
 Disassembly of section .init:
 
-0000000000001000 <_init>:
-    1000:	48 83 ec 08          	sub    $0x8,%rsp
-    1004:	48 8b 05 f5 21 00 00 	mov    0x21f5(%rip),%rax        # 3200 <__gmon_start__@Base>
-    100b:	48 85 c0             	test   %rax,%rax
-    100e:	74 02                	je     1012 <_init+0x12>
-    1010:	ff d0                	call   *%rax
-    1012:	48 83 c4 08          	add    $0x8,%rsp
-    1016:	c3                   	ret    
+00001000 <_init>:
+    1000:	53                   	push   %ebx
+    1001:	83 ec 08             	sub    $0x8,%esp
+    1004:	e8 a7 00 00 00       	call   10b0 <__x86.get_pc_thunk.bx>
+    1009:	81 c3 f7 2f 00 00    	add    $0x2ff7,%ebx
+    100f:	8b 83 00 f1 ff ff    	mov    -0xf00(%ebx),%eax
+    1015:	85 c0                	test   %eax,%eax
+    1017:	74 02                	je     101b <_init+0x1b>
+    1019:	ff d0                	call   *%eax
+    101b:	83 c4 08             	add    $0x8,%esp
+    101e:	5b                   	pop    %ebx
+    101f:	c3                   	ret    
 
 Disassembly of section .plt:
 
-0000000000001020 <strcpy@plt-0x10>:
-    1020:	ff 35 e2 2f 00 00    	push   0x2fe2(%rip)        # 4008 <_GLOBAL_OFFSET_TABLE_+0x8>
-    1026:	ff 25 e4 2f 00 00    	jmp    *0x2fe4(%rip)        # 4010 <_GLOBAL_OFFSET_TABLE_+0x10>
-    102c:	0f 1f 40 00          	nopl   0x0(%rax)
+00001020 <strcpy@plt-0x10>:
+    1020:	ff b3 04 00 00 00    	push   0x4(%ebx)
+    1026:	ff a3 08 00 00 00    	jmp    *0x8(%ebx)
+    102c:	00 00                	add    %al,(%eax)
+	...
 
-0000000000001030 <strcpy@plt>:
-    1030:	ff 25 e2 2f 00 00    	jmp    *0x2fe2(%rip)        # 4018 <strcpy@GLIBC_2.2.5>
+00001030 <strcpy@plt>:
+    1030:	ff a3 0c 00 00 00    	jmp    *0xc(%ebx)
     1036:	68 00 00 00 00       	push   $0x0
     103b:	e9 e0 ff ff ff       	jmp    1020 <_init+0x20>
 
-0000000000001040 <exit@plt>:
-    1040:	ff 25 da 2f 00 00    	jmp    *0x2fda(%rip)        # 4020 <exit@GLIBC_2.2.5>
-    1046:	68 01 00 00 00       	push   $0x1
+00001040 <exit@plt>:
+    1040:	ff a3 10 00 00 00    	jmp    *0x10(%ebx)
+    1046:	68 08 00 00 00       	push   $0x8
     104b:	e9 d0 ff ff ff       	jmp    1020 <_init+0x20>
+
+00001050 <__libc_start_main@plt>:
+    1050:	ff a3 14 00 00 00    	jmp    *0x14(%ebx)
+    1056:	68 10 00 00 00       	push   $0x10
+    105b:	e9 c0 ff ff ff       	jmp    1020 <_init+0x20>
 
 Disassembly of section .plt.got:
 
-0000000000001050 <__cxa_finalize@plt>:
-    1050:	ff 25 ba 21 00 00    	jmp    *0x21ba(%rip)        # 3210 <__cxa_finalize@GLIBC_2.2.5>
-    1056:	66 90                	xchg   %ax,%ax
+00001060 <__cxa_finalize@plt>:
+    1060:	ff a3 fc f0 ff ff    	jmp    *-0xf04(%ebx)
+    1066:	66 90                	xchg   %ax,%ax
 
 Disassembly of section .text:
 
-0000000000001060 <_start>:
-    1060:	31 ed                	xor    %ebp,%ebp
-    1062:	49 89 d1             	mov    %rdx,%r9
-    1065:	5e                   	pop    %rsi
-    1066:	48 89 e2             	mov    %rsp,%rdx
-    1069:	48 83 e4 f0          	and    $0xfffffffffffffff0,%rsp
-    106d:	50                   	push   %rax
-    106e:	54                   	push   %rsp
-    106f:	4c 8d 05 9a 01 00 00 	lea    0x19a(%rip),%r8        # 1210 <__libc_csu_fini>
-    1076:	48 8d 0d 33 01 00 00 	lea    0x133(%rip),%rcx        # 11b0 <__libc_csu_init>
-    107d:	48 8d 3d e3 00 00 00 	lea    0xe3(%rip),%rdi        # 1167 <main>
-    1084:	ff 15 6e 21 00 00    	call   *0x216e(%rip)        # 31f8 <__libc_start_main@GLIBC_2.2.5>
-    108a:	f4                   	hlt    
-    108b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+00001070 <_start>:
+    1070:	31 ed                	xor    %ebp,%ebp
+    1072:	5e                   	pop    %esi
+    1073:	89 e1                	mov    %esp,%ecx
+    1075:	83 e4 f0             	and    $0xfffffff0,%esp
+    1078:	50                   	push   %eax
+    1079:	54                   	push   %esp
+    107a:	52                   	push   %edx
+    107b:	e8 22 00 00 00       	call   10a2 <_start+0x32>
+    1080:	81 c3 80 2f 00 00    	add    $0x2f80,%ebx
+    1086:	8d 83 90 d2 ff ff    	lea    -0x2d70(%ebx),%eax
+    108c:	50                   	push   %eax
+    108d:	8d 83 30 d2 ff ff    	lea    -0x2dd0(%ebx),%eax
+    1093:	50                   	push   %eax
+    1094:	51                   	push   %ecx
+    1095:	56                   	push   %esi
+    1096:	ff b3 04 f1 ff ff    	push   -0xefc(%ebx)
+    109c:	e8 af ff ff ff       	call   1050 <__libc_start_main@plt>
+    10a1:	f4                   	hlt    
+    10a2:	8b 1c 24             	mov    (%esp),%ebx
+    10a5:	c3                   	ret    
+    10a6:	66 90                	xchg   %ax,%ax
+    10a8:	66 90                	xchg   %ax,%ax
+    10aa:	66 90                	xchg   %ax,%ax
+    10ac:	66 90                	xchg   %ax,%ax
+    10ae:	66 90                	xchg   %ax,%ax
 
-0000000000001090 <deregister_tm_clones>:
-    1090:	48 8d 3d a1 2f 00 00 	lea    0x2fa1(%rip),%rdi        # 4038 <__TMC_END__>
-    1097:	48 8d 05 9a 2f 00 00 	lea    0x2f9a(%rip),%rax        # 4038 <__TMC_END__>
-    109e:	48 39 f8             	cmp    %rdi,%rax
-    10a1:	74 15                	je     10b8 <deregister_tm_clones+0x28>
-    10a3:	48 8b 05 46 21 00 00 	mov    0x2146(%rip),%rax        # 31f0 <_ITM_deregisterTMCloneTable@Base>
-    10aa:	48 85 c0             	test   %rax,%rax
-    10ad:	74 09                	je     10b8 <deregister_tm_clones+0x28>
-    10af:	ff e0                	jmp    *%rax
-    10b1:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
-    10b8:	c3                   	ret    
-    10b9:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+000010b0 <__x86.get_pc_thunk.bx>:
+    10b0:	8b 1c 24             	mov    (%esp),%ebx
+    10b3:	c3                   	ret    
+    10b4:	66 90                	xchg   %ax,%ax
+    10b6:	66 90                	xchg   %ax,%ax
+    10b8:	66 90                	xchg   %ax,%ax
+    10ba:	66 90                	xchg   %ax,%ax
+    10bc:	66 90                	xchg   %ax,%ax
+    10be:	66 90                	xchg   %ax,%ax
 
-00000000000010c0 <register_tm_clones>:
-    10c0:	48 8d 3d 71 2f 00 00 	lea    0x2f71(%rip),%rdi        # 4038 <__TMC_END__>
-    10c7:	48 8d 35 6a 2f 00 00 	lea    0x2f6a(%rip),%rsi        # 4038 <__TMC_END__>
-    10ce:	48 29 fe             	sub    %rdi,%rsi
-    10d1:	48 89 f0             	mov    %rsi,%rax
-    10d4:	48 c1 ee 3f          	shr    $0x3f,%rsi
-    10d8:	48 c1 f8 03          	sar    $0x3,%rax
-    10dc:	48 01 c6             	add    %rax,%rsi
-    10df:	48 d1 fe             	sar    %rsi
-    10e2:	74 14                	je     10f8 <register_tm_clones+0x38>
-    10e4:	48 8b 05 1d 21 00 00 	mov    0x211d(%rip),%rax        # 3208 <_ITM_registerTMCloneTable@Base>
-    10eb:	48 85 c0             	test   %rax,%rax
-    10ee:	74 08                	je     10f8 <register_tm_clones+0x38>
-    10f0:	ff e0                	jmp    *%rax
-    10f2:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+000010c0 <deregister_tm_clones>:
+    10c0:	e8 e0 00 00 00       	call   11a5 <__x86.get_pc_thunk.dx>
+    10c5:	81 c2 3b 2f 00 00    	add    $0x2f3b,%edx
+    10cb:	8d 8a 20 00 00 00    	lea    0x20(%edx),%ecx
+    10d1:	8d 82 20 00 00 00    	lea    0x20(%edx),%eax
+    10d7:	39 c8                	cmp    %ecx,%eax
+    10d9:	74 1d                	je     10f8 <deregister_tm_clones+0x38>
+    10db:	8b 82 f8 f0 ff ff    	mov    -0xf08(%edx),%eax
+    10e1:	85 c0                	test   %eax,%eax
+    10e3:	74 13                	je     10f8 <deregister_tm_clones+0x38>
+    10e5:	55                   	push   %ebp
+    10e6:	89 e5                	mov    %esp,%ebp
+    10e8:	83 ec 14             	sub    $0x14,%esp
+    10eb:	51                   	push   %ecx
+    10ec:	ff d0                	call   *%eax
+    10ee:	83 c4 10             	add    $0x10,%esp
+    10f1:	c9                   	leave  
+    10f2:	c3                   	ret    
+    10f3:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
+    10f7:	90                   	nop
     10f8:	c3                   	ret    
-    10f9:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+    10f9:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
 
-0000000000001100 <__do_global_dtors_aux>:
-    1100:	80 3d 31 2f 00 00 00 	cmpb   $0x0,0x2f31(%rip)        # 4038 <__TMC_END__>
-    1107:	75 2f                	jne    1138 <__do_global_dtors_aux+0x38>
-    1109:	55                   	push   %rbp
-    110a:	48 83 3d fe 20 00 00 	cmpq   $0x0,0x20fe(%rip)        # 3210 <__cxa_finalize@GLIBC_2.2.5>
-    1111:	00 
-    1112:	48 89 e5             	mov    %rsp,%rbp
-    1115:	74 0c                	je     1123 <__do_global_dtors_aux+0x23>
-    1117:	48 8b 3d 12 2f 00 00 	mov    0x2f12(%rip),%rdi        # 4030 <__dso_handle>
-    111e:	e8 2d ff ff ff       	call   1050 <__cxa_finalize@plt>
-    1123:	e8 68 ff ff ff       	call   1090 <deregister_tm_clones>
-    1128:	c6 05 09 2f 00 00 01 	movb   $0x1,0x2f09(%rip)        # 4038 <__TMC_END__>
-    112f:	5d                   	pop    %rbp
-    1130:	c3                   	ret    
-    1131:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
-    1138:	c3                   	ret    
-    1139:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+00001100 <register_tm_clones>:
+    1100:	e8 a0 00 00 00       	call   11a5 <__x86.get_pc_thunk.dx>
+    1105:	81 c2 fb 2e 00 00    	add    $0x2efb,%edx
+    110b:	55                   	push   %ebp
+    110c:	89 e5                	mov    %esp,%ebp
+    110e:	53                   	push   %ebx
+    110f:	8d 8a 20 00 00 00    	lea    0x20(%edx),%ecx
+    1115:	8d 82 20 00 00 00    	lea    0x20(%edx),%eax
+    111b:	83 ec 04             	sub    $0x4,%esp
+    111e:	29 c8                	sub    %ecx,%eax
+    1120:	89 c3                	mov    %eax,%ebx
+    1122:	c1 e8 1f             	shr    $0x1f,%eax
+    1125:	c1 fb 02             	sar    $0x2,%ebx
+    1128:	01 d8                	add    %ebx,%eax
+    112a:	d1 f8                	sar    %eax
+    112c:	74 14                	je     1142 <register_tm_clones+0x42>
+    112e:	8b 92 08 f1 ff ff    	mov    -0xef8(%edx),%edx
+    1134:	85 d2                	test   %edx,%edx
+    1136:	74 0a                	je     1142 <register_tm_clones+0x42>
+    1138:	83 ec 08             	sub    $0x8,%esp
+    113b:	50                   	push   %eax
+    113c:	51                   	push   %ecx
+    113d:	ff d2                	call   *%edx
+    113f:	83 c4 10             	add    $0x10,%esp
+    1142:	8b 5d fc             	mov    -0x4(%ebp),%ebx
+    1145:	c9                   	leave  
+    1146:	c3                   	ret    
+    1147:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+    114e:	66 90                	xchg   %ax,%ax
 
-0000000000001140 <frame_dummy>:
-    1140:	e9 7b ff ff ff       	jmp    10c0 <register_tm_clones>
+00001150 <__do_global_dtors_aux>:
+    1150:	55                   	push   %ebp
+    1151:	89 e5                	mov    %esp,%ebp
+    1153:	53                   	push   %ebx
+    1154:	e8 57 ff ff ff       	call   10b0 <__x86.get_pc_thunk.bx>
+    1159:	81 c3 a7 2e 00 00    	add    $0x2ea7,%ebx
+    115f:	83 ec 04             	sub    $0x4,%esp
+    1162:	80 bb 20 00 00 00 00 	cmpb   $0x0,0x20(%ebx)
+    1169:	75 27                	jne    1192 <__do_global_dtors_aux+0x42>
+    116b:	8b 83 fc f0 ff ff    	mov    -0xf04(%ebx),%eax
+    1171:	85 c0                	test   %eax,%eax
+    1173:	74 11                	je     1186 <__do_global_dtors_aux+0x36>
+    1175:	83 ec 0c             	sub    $0xc,%esp
+    1178:	ff b3 1c 00 00 00    	push   0x1c(%ebx)
+    117e:	e8 dd fe ff ff       	call   1060 <__cxa_finalize@plt>
+    1183:	83 c4 10             	add    $0x10,%esp
+    1186:	e8 35 ff ff ff       	call   10c0 <deregister_tm_clones>
+    118b:	c6 83 20 00 00 00 01 	movb   $0x1,0x20(%ebx)
+    1192:	8b 5d fc             	mov    -0x4(%ebp),%ebx
+    1195:	c9                   	leave  
+    1196:	c3                   	ret    
+    1197:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+    119e:	66 90                	xchg   %ax,%ax
 
-0000000000001145 <foobar>:
-    1145:	55                   	push   %rbp
-    1146:	48 89 e5             	mov    %rsp,%rbp
-    1149:	48 83 c4 80          	add    $0xffffffffffffff80,%rsp
-    114d:	48 89 7d 88          	mov    %rdi,-0x78(%rbp)
-    1151:	48 8b 55 88          	mov    -0x78(%rbp),%rdx
-    1155:	48 8d 45 90          	lea    -0x70(%rbp),%rax
-    1159:	48 89 d6             	mov    %rdx,%rsi
-    115c:	48 89 c7             	mov    %rax,%rdi
-    115f:	e8 cc fe ff ff       	call   1030 <strcpy@plt>
-    1164:	90                   	nop
-    1165:	c9                   	leave  
-    1166:	c3                   	ret    
+000011a0 <frame_dummy>:
+    11a0:	e9 5b ff ff ff       	jmp    1100 <register_tm_clones>
 
-0000000000001167 <main>:
-    1167:	55                   	push   %rbp
-    1168:	48 89 e5             	mov    %rsp,%rbp
-    116b:	48 83 ec 10          	sub    $0x10,%rsp
-    116f:	89 7d fc             	mov    %edi,-0x4(%rbp)
-    1172:	48 89 75 f0          	mov    %rsi,-0x10(%rbp)
-    1176:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
-    117a:	48 83 c0 08          	add    $0x8,%rax
-    117e:	48 8b 00             	mov    (%rax),%rax
-    1181:	48 85 c0             	test   %rax,%rax
-    1184:	75 07                	jne    118d <main+0x26>
-    1186:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
-    118b:	eb 1d                	jmp    11aa <main+0x43>
-    118d:	48 8b 45 f0          	mov    -0x10(%rbp),%rax
-    1191:	48 83 c0 08          	add    $0x8,%rax
-    1195:	48 8b 00             	mov    (%rax),%rax
-    1198:	48 89 c7             	mov    %rax,%rdi
-    119b:	e8 a5 ff ff ff       	call   1145 <foobar>
-    11a0:	bf 00 00 00 00       	mov    $0x0,%edi
-    11a5:	e8 96 fe ff ff       	call   1040 <exit@plt>
-    11aa:	c9                   	leave  
-    11ab:	c3                   	ret    
-    11ac:	0f 1f 40 00          	nopl   0x0(%rax)
+000011a5 <__x86.get_pc_thunk.dx>:
+    11a5:	8b 14 24             	mov    (%esp),%edx
+    11a8:	c3                   	ret    
 
-00000000000011b0 <__libc_csu_init>:
-    11b0:	41 57                	push   %r15
-    11b2:	4c 8d 3d 47 1e 00 00 	lea    0x1e47(%rip),%r15        # 3000 <__frame_dummy_init_array_entry>
-    11b9:	41 56                	push   %r14
-    11bb:	49 89 d6             	mov    %rdx,%r14
-    11be:	41 55                	push   %r13
-    11c0:	49 89 f5             	mov    %rsi,%r13
-    11c3:	41 54                	push   %r12
-    11c5:	41 89 fc             	mov    %edi,%r12d
-    11c8:	55                   	push   %rbp
-    11c9:	48 8d 2d 38 1e 00 00 	lea    0x1e38(%rip),%rbp        # 3008 <__do_global_dtors_aux_fini_array_entry>
-    11d0:	53                   	push   %rbx
-    11d1:	4c 29 fd             	sub    %r15,%rbp
-    11d4:	48 83 ec 08          	sub    $0x8,%rsp
-    11d8:	e8 23 fe ff ff       	call   1000 <_init>
-    11dd:	48 c1 fd 03          	sar    $0x3,%rbp
-    11e1:	74 1b                	je     11fe <__libc_csu_init+0x4e>
-    11e3:	31 db                	xor    %ebx,%ebx
-    11e5:	0f 1f 00             	nopl   (%rax)
-    11e8:	4c 89 f2             	mov    %r14,%rdx
-    11eb:	4c 89 ee             	mov    %r13,%rsi
-    11ee:	44 89 e7             	mov    %r12d,%edi
-    11f1:	41 ff 14 df          	call   *(%r15,%rbx,8)
-    11f5:	48 83 c3 01          	add    $0x1,%rbx
-    11f9:	48 39 dd             	cmp    %rbx,%rbp
-    11fc:	75 ea                	jne    11e8 <__libc_csu_init+0x38>
-    11fe:	48 83 c4 08          	add    $0x8,%rsp
-    1202:	5b                   	pop    %rbx
-    1203:	5d                   	pop    %rbp
-    1204:	41 5c                	pop    %r12
-    1206:	41 5d                	pop    %r13
-    1208:	41 5e                	pop    %r14
-    120a:	41 5f                	pop    %r15
-    120c:	c3                   	ret    
-    120d:	0f 1f 00             	nopl   (%rax)
+000011a9 <foobar>:
+    11a9:	55                   	push   %ebp
+    11aa:	89 e5                	mov    %esp,%ebp
+    11ac:	53                   	push   %ebx
+    11ad:	83 ec 74             	sub    $0x74,%esp
+    11b0:	e8 76 00 00 00       	call   122b <__x86.get_pc_thunk.ax>
+    11b5:	05 4b 2e 00 00       	add    $0x2e4b,%eax
+    11ba:	83 ec 08             	sub    $0x8,%esp
+    11bd:	ff 75 08             	push   0x8(%ebp)
+    11c0:	8d 55 94             	lea    -0x6c(%ebp),%edx
+    11c3:	52                   	push   %edx
+    11c4:	89 c3                	mov    %eax,%ebx
+    11c6:	e8 65 fe ff ff       	call   1030 <strcpy@plt>
+    11cb:	83 c4 10             	add    $0x10,%esp
+    11ce:	90                   	nop
+    11cf:	8b 5d fc             	mov    -0x4(%ebp),%ebx
+    11d2:	c9                   	leave  
+    11d3:	c3                   	ret    
 
-0000000000001210 <__libc_csu_fini>:
-    1210:	c3                   	ret    
+000011d4 <main>:
+    11d4:	8d 4c 24 04          	lea    0x4(%esp),%ecx
+    11d8:	83 e4 f0             	and    $0xfffffff0,%esp
+    11db:	ff 71 fc             	push   -0x4(%ecx)
+    11de:	55                   	push   %ebp
+    11df:	89 e5                	mov    %esp,%ebp
+    11e1:	53                   	push   %ebx
+    11e2:	51                   	push   %ecx
+    11e3:	e8 c8 fe ff ff       	call   10b0 <__x86.get_pc_thunk.bx>
+    11e8:	81 c3 18 2e 00 00    	add    $0x2e18,%ebx
+    11ee:	89 c8                	mov    %ecx,%eax
+    11f0:	8b 50 04             	mov    0x4(%eax),%edx
+    11f3:	83 c2 04             	add    $0x4,%edx
+    11f6:	8b 12                	mov    (%edx),%edx
+    11f8:	85 d2                	test   %edx,%edx
+    11fa:	75 07                	jne    1203 <main+0x2f>
+    11fc:	b8 ff ff ff ff       	mov    $0xffffffff,%eax
+    1201:	eb 1e                	jmp    1221 <main+0x4d>
+    1203:	8b 40 04             	mov    0x4(%eax),%eax
+    1206:	83 c0 04             	add    $0x4,%eax
+    1209:	8b 00                	mov    (%eax),%eax
+    120b:	83 ec 0c             	sub    $0xc,%esp
+    120e:	50                   	push   %eax
+    120f:	e8 95 ff ff ff       	call   11a9 <foobar>
+    1214:	83 c4 10             	add    $0x10,%esp
+    1217:	83 ec 0c             	sub    $0xc,%esp
+    121a:	6a 00                	push   $0x0
+    121c:	e8 1f fe ff ff       	call   1040 <exit@plt>
+    1221:	8d 65 f8             	lea    -0x8(%ebp),%esp
+    1224:	59                   	pop    %ecx
+    1225:	5b                   	pop    %ebx
+    1226:	5d                   	pop    %ebp
+    1227:	8d 61 fc             	lea    -0x4(%ecx),%esp
+    122a:	c3                   	ret    
+
+0000122b <__x86.get_pc_thunk.ax>:
+    122b:	8b 04 24             	mov    (%esp),%eax
+    122e:	c3                   	ret    
+    122f:	90                   	nop
+
+00001230 <__libc_csu_init>:
+    1230:	55                   	push   %ebp
+    1231:	e8 5b 00 00 00       	call   1291 <__x86.get_pc_thunk.bp>
+    1236:	81 c5 ca 2d 00 00    	add    $0x2dca,%ebp
+    123c:	57                   	push   %edi
+    123d:	56                   	push   %esi
+    123e:	53                   	push   %ebx
+    123f:	83 ec 0c             	sub    $0xc,%esp
+    1242:	89 eb                	mov    %ebp,%ebx
+    1244:	8b 7c 24 28          	mov    0x28(%esp),%edi
+    1248:	e8 b3 fd ff ff       	call   1000 <_init>
+    124d:	8d 9d 04 f0 ff ff    	lea    -0xffc(%ebp),%ebx
+    1253:	8d 85 00 f0 ff ff    	lea    -0x1000(%ebp),%eax
+    1259:	29 c3                	sub    %eax,%ebx
+    125b:	c1 fb 02             	sar    $0x2,%ebx
+    125e:	74 25                	je     1285 <__libc_csu_init+0x55>
+    1260:	31 f6                	xor    %esi,%esi
+    1262:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
+    1268:	83 ec 04             	sub    $0x4,%esp
+    126b:	57                   	push   %edi
+    126c:	ff 74 24 2c          	push   0x2c(%esp)
+    1270:	ff 74 24 2c          	push   0x2c(%esp)
+    1274:	ff 94 b5 00 f0 ff ff 	call   *-0x1000(%ebp,%esi,4)
+    127b:	83 c6 01             	add    $0x1,%esi
+    127e:	83 c4 10             	add    $0x10,%esp
+    1281:	39 f3                	cmp    %esi,%ebx
+    1283:	75 e3                	jne    1268 <__libc_csu_init+0x38>
+    1285:	83 c4 0c             	add    $0xc,%esp
+    1288:	5b                   	pop    %ebx
+    1289:	5e                   	pop    %esi
+    128a:	5f                   	pop    %edi
+    128b:	5d                   	pop    %ebp
+    128c:	c3                   	ret    
+    128d:	8d 76 00             	lea    0x0(%esi),%esi
+
+00001290 <__libc_csu_fini>:
+    1290:	c3                   	ret    
+
+00001291 <__x86.get_pc_thunk.bp>:
+    1291:	8b 2c 24             	mov    (%esp),%ebp
+    1294:	c3                   	ret    
 
 Disassembly of section .fini:
 
-0000000000001214 <_fini>:
-    1214:	48 83 ec 08          	sub    $0x8,%rsp
-    1218:	48 83 c4 08          	add    $0x8,%rsp
-    121c:	c3                   	ret    
+00001298 <_fini>:
+    1298:	53                   	push   %ebx
+    1299:	83 ec 08             	sub    $0x8,%esp
+    129c:	e8 0f fe ff ff       	call   10b0 <__x86.get_pc_thunk.bx>
+    12a1:	81 c3 5f 2d 00 00    	add    $0x2d5f,%ebx
+    12a7:	83 c4 08             	add    $0x8,%esp
+    12aa:	5b                   	pop    %ebx
+    12ab:	c3                   	ret    
