@@ -50,3 +50,11 @@ chmod o-r test
 chmod g=rwx test
 
 rm test
+
+
+# Show the default umask
+echo -e "\nThe default umask for this system is: $(umask)"
+
+# Show the file the umask reads
+echo -e "\nIn '.profile' this is defined as:"
+cat ~/.profile | head -9 | tail -1
