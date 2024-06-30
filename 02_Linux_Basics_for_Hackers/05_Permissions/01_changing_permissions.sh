@@ -1,7 +1,8 @@
 #!/bin/bash
 # Changing File & Folder Permissions
 
-# Changing Permissions With Octals
+
+### Changing Permissions With Octals
 #   0   ---
 #   1   --x
 #   2   -w-
@@ -23,5 +24,29 @@ chmod 744 test
 
 # Give read & execute to everybody and all permissions to the user
 chmod 755 test
+
+
+### Changing permissions with UGO
+
+#   +   add
+#   -   remove
+#   =   set
+
+#   u   user
+#   g   group
+#   o   others
+
+#   r   read
+#   w   write
+#   x   execute
+
+# Add write permission for a user
+chmod u+w test
+
+# Remove read for others
+chmod o-r test
+
+# Set group permission to read, write, execute
+chmod g=rwx test
 
 rm test
