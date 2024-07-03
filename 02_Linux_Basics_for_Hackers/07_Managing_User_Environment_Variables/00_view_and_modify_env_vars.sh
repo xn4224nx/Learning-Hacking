@@ -17,3 +17,7 @@ set | grep XDG
 MY_TEMP_INT=900
 MY_TEMP_STR="A very short string."
 echo -e "\nThe temporary variables are:\n\t$MY_TEMP_INT\n\t$MY_TEMP_STR\n"
+
+# Set the prompt of the shell
+# Won't work in a script
+PS1="C:\ "
