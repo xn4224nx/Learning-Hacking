@@ -23,10 +23,10 @@ mysql -u root -p'\n' -Bse "show databases;"
 echo -e "\nTables in information schema:\n"
 mysql -u root -p'\n' -Bse "use information_schema; show tables;"
 
-echo -e "\nThe Schema for user_variables :\n"
+echo -e "\nThe Schema for 'COLUMNS':\n"
 mysql -u root -p'\n' -Bse "use information_schema; describe COLUMNS;"
 
-echo -e "\nA sample of the table:\n"
+echo -e "\nA sample of 'COLUMNS':\n"
 mysql -u root -p'\n' "information_schema" -Bse "SELECT * FROM COLUMNS LIMIT 10"
 
 # Stop the service
