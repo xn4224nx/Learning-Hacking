@@ -14,7 +14,20 @@ sudo service mysql start
 # sudo mysql_secure_installation
 
 # Run a SQL script on the database
-mysql -u root -p'' < ./sql_queries/all_user_details.sql > ./results.txt
+mysql -u root -p'\n' < ./sql_queries/all_user_details.sql > ./results.txt
+
+# Run a command to show the databases to stdout
+echo -e "\nDatabases:\n"
+mysql -u root -p'\n' -Bse "show databases;"
+
+echo -e "\nTables in information schema:\n"
+mysql -u root -p'\n' -Bse "use information_schema; show tables;"
+
+echo -e "\nThe Schema for user_variables :\n"
+mysql -u root -p'\n' -Bse "use information_schema; describe COLUMNS;"
+
+echo -e "\nA sample of the table:\n"
+mysql -u root -p'\n' "information_schema" -Bse "SELECT * FROM COLUMNS LIMIT 10"
 
 # Stop the service
 sudo service mysql stop
