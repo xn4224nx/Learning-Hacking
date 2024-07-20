@@ -206,3 +206,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Kate temp files
+.kate-swp
