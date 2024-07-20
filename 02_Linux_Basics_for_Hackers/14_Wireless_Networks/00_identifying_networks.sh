@@ -11,4 +11,4 @@ iwconfig
 
 # Show the available wifi networks
 echo -e "\nCurrently available WiFi networks:\n"
-nmcli dev wifi
+nmcli -p -w 0 dev wifi
