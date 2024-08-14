@@ -10,6 +10,8 @@ A collection of the completed exercises script files created when learning hacki
 
 2. [Linux Basics for Hackers](https://nostarch.com/linuxbasicsforhackers) - This practical, tutorial-style book uses the Kali Linux distribution to teach Linux basics with a focus on how hackers would use them. Topics include Linux command line basics, filesystems, networking, BASH basics, package management, logging, and the Linux kernel and drivers.
 
+3. [Black Hat Python](https://nostarch.com/black-hat-python2E) - Fully-updated for Python 3, the second edition of this worldwide bestseller (over 100,000 copies sold) explores the stealthier side of programming and brings you all new strategies for your hacking projects.
+
 ## Future Resources
 
 Some viable books to use in future learning:
