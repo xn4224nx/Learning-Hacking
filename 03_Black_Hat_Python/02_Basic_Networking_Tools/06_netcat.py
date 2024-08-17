@@ -1,3 +1,4 @@
+#!/bin/python3
 """
 Netcat
 ======
@@ -142,7 +143,7 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--port", type=int, default=5555, help="specified port")
     parser.add_argument("-t", "--target", default="192.168.1.203", help="specified IP")
     parser.add_argument("-u", "--upload", help="upload file")
-    args = parser.pars_args()
+    args = parser.parse_args()
 
     if args.listen:
         r_buffer = ""
