@@ -208,4 +208,4 @@ dmypy.json
 .pyre/
 
 # Kate temp files
-.kate-swp
+*.kate-swp
