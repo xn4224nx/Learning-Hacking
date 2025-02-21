@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Determine the version of Bash that is present
 bash --version
 
