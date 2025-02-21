@@ -12,6 +12,8 @@ A collection of the completed exercises script files created when learning hacki
 
 3. [Black Hat Python](https://nostarch.com/black-hat-python2E) - Fully-updated for Python 3, the second edition of this worldwide bestseller (over 100,000 copies sold) explores the stealthier side of programming and brings you all new strategies for your hacking projects.
 
+4. [Black Hat Bash](https://nostarch.com/black-hat-bash) - Master the art of offensive bash scripting. This highly practical hands-on guide covers chaining commands together, automating tasks, crafting living-off-the-land attacks, and more! 
+
 ## Future Resources
 
 Some viable books to use in future learning:
