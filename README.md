@@ -14,6 +14,8 @@ A collection of the completed exercises script files created when learning hacki
 
 4. [Black Hat Bash](https://nostarch.com/black-hat-bash) - Master the art of offensive bash scripting. This highly practical hands-on guide covers chaining commands together, automating tasks, crafting living-off-the-land attacks, and more! 
 
+5. [Python for Security and Networking](https://github.com/PacktPublishing/Python-for-Security-and-Networking) - Leverage Python modules and tools in securing your network and applications.
+
 ## Future Resources
 
 Some viable books to use in future learning:
