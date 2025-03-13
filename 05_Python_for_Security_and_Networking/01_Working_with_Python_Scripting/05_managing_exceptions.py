@@ -3,7 +3,7 @@
 
 # Catching Exceptions
 try:
-    print("10/0 = f{10/0}")
+    print(f"10/0 = {10/0}")
 except ZeroDivisionError as err:
     print(f"Error = {err}")
 
