@@ -25,8 +25,9 @@ if __name__ == "__main__":
         raise Exception(f"{curr_os} is not a supported os!")
 
     # Execute the ping command
-    proc = subprocess.Popen([ping_comm, ping_param, domain], shell=False, stderr=subprocess.PIPE)
+    proc = subprocess.Popen(
+        [ping_comm, ping_param, domain], shell=False, stderr=subprocess.PIPE
+    )
     out = proc.stderr.read(1)
     sys.stdout.write(str(out.decode("utf-8")))
     sys.stdout.flush()
-
