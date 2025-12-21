@@ -16,4 +16,8 @@ rm ${asm_file}".o"
 [ "$2" == "-g" ] && gdb -q ${asm_file} || ./${asm_file}
 
 # Remove the object file
-rm ${asm_file}
+if [ "$2" == "-d" ]; then
+    rm ${asm_file}
+fi
+
+
