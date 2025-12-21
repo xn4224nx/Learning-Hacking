@@ -14,3 +14,6 @@ rm ${asm_file}".o"
 
 # Run the executable file or debug through gnu
 [ "$2" == "-g" ] && gdb -q ${asm_file} || ./${asm_file}
+
+# Remove the object file
+rm ${asm_file}
