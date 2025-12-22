@@ -10,4 +10,10 @@ _start:
     xor rbx, rbx
     inc rbx
 
-    add rax, rbx
+    ; Define how many fibonnaci values to generate.
+    mov rcx, 10
+
+fibloop:
+   add rax, rbx     ; Generate the next number
+   xchg rax, rbx    ; Swap the two numbers
+   loop fibloop
