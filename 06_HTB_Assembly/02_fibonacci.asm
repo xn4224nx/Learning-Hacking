@@ -3,9 +3,11 @@
 
 global _start
 
-
 section .text
 _start:
-    ; Set the two initial values of the fibonacci sequence.
-    mov al, 0
-    mov bl, 1
+    ; Set the two initial values of the fibonacci sequence to zero and one.
+    xor rax, rax
+    xor rbx, rbx
+    inc rbx
+
+    add rax, rbx
