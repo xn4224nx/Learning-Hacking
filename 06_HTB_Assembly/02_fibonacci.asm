@@ -27,3 +27,8 @@ fibloop:
    add rax, rbx     ; Generate the next number
    xchg rax, rbx    ; Swap the two numbers
    loop fibloop
+
+   ; Close down the program gracefully.
+   mov rax, 60
+   mov rdi, 0
+   syscall
