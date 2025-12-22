@@ -21,6 +21,7 @@ print_intro_msg:
     mov rsi, msg    ; pass the pointer to the message to be printed
     mov rdx, msg_l  ; specify the message length
     syscall         ; call the function
+    ret
 
 ; Set the two initial values of the fibonacci sequence to zero and one.
 init_fib_seq:
@@ -30,16 +31,17 @@ init_fib_seq:
 
     ; Define how many fibonnaci values to generate.
     mov rcx, 10
+    ret
 
 fib_loop:
-   add rax, rbx     ; Generate the next number
-   xchg rax, rbx    ; Swap the two numbers
-   loop fib_loop
-
+    add rax, rbx     ; Generate the next number
+    xchg rax, rbx    ; Swap the two numbers
+    loop fib_loop
+    ret
 
 
    ; Close down the program gracefully.
 prog_exit:
-   mov rax, 60
-   mov rdi, 0
-   syscall
+    mov rax, 60
+    mov rdi, 0
+    syscall
