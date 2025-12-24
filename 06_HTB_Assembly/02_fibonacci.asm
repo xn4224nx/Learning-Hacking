@@ -2,16 +2,21 @@
 ;   ============================
 
 global _start
-extern  printf
+extern  printf, scanf
 
 section .data
-    msg db "Fibonacci Sequence:", 0x0a
+    msg db "Input the max value: ", 0x0
     msg_l equ $-msg
     out_fmt db "%d", 0x0a, 0x00
+    in_fmt db "%d", 0x00
+
+section .bss
+    user_in resb 1
 
 section .text
 _start:
     call print_intro_msg
+    call get_input
     call init_fib_seq
     call fib_loop
     call prog_exit
@@ -36,7 +41,7 @@ fib_loop:
     call print_curr_fib
     add rax, rbx        ; Generate the next number
     xchg rax, rbx       ; Swap the two numbers
-    cmp rbx, 200        ; do rbx - 200
+    cmp rbx, [user_in]  ; do rbx - 200
     js fib_loop         ; jump if result is <0
     ret
 
@@ -60,4 +65,13 @@ print_curr_fib:
     ; Restore the registers from the stack
     pop rbx
     pop rax
+    ret
+
+; Get user input
+get_input:
+    sub rsp, 8
+    mov rdi, in_fmt
+    mov rsi, user_in
+    call scanf
+    add rsp, 8
     ret
