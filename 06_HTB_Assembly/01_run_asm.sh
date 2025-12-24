@@ -7,7 +7,7 @@ asm_file="${1%%.*}"
 nasm -f elf64 $1
 
 # Link the file to resolve the addresses
-ld ${asm_file}".o" -o ${asm_file}
+ld ${asm_file}".o" -o ${asm_file} -lc --dynamic-linker /lib64/ld-linux-x86-64.so.2
 
 # Remove the object file
 rm ${asm_file}".o"
