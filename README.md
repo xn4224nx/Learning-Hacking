@@ -16,6 +16,8 @@ A collection of the completed exercises script files created when learning hacki
 
 5. [Python for Security and Networking](https://github.com/PacktPublishing/Python-for-Security-and-Networking) - Leverage Python modules and tools in securing your network and applications.
 
+7. [Black Hat Rust](https://github.com/skerkour/black-hat-rust) - Applied offensive security with the Rust programming language.
+
 ## Future Resources
 
 Some viable books to use in future learning:
