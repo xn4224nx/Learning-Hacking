@@ -2,48 +2,8 @@
  * Chapter 2 - Tricorder
  */
 
-use std::collections::HashSet;
+mod sub_domain_lookup;
 
 fn main() {
-    let scrape_url = String::from("https://crt.sh/?q=%25.bbc.co.uk&output=json");
-
-    /* Get the raw request from the site. */
-    let req_body = web_get_txt(&scrape_url).unwrap();
-
-    println!("{:?}", extract_subdomains(&req_body).unwrap());
-}
-
-/// Extract the raw text from a web request.
-fn web_get_txt(url: &str) -> Option<String> {
-    return Some(reqwest::blocking::get(url).ok()?.text().ok()?);
-}
-
-/// Take the raw body result and extract the subdomains
-fn extract_subdomains(raw_body: &String) -> Option<Vec<String>> {
-    let mut sub_domains = HashSet::new();
-
-    /* Parse the raw text into a Json. */
-    let all_dom_info: serde_json::Value = serde_json::from_str(raw_body).ok()?;
-
-    /* From the parsed data extract the subdomains. */
-    for dom_info in all_dom_info.as_array()?.into_iter() {
-        for pote_key_nm in vec!["common_name", "name_value"] {
-            let Some(s_dom) = dom_info.get(pote_key_nm).and_then(|x| x.as_str()) else {
-                continue;
-            };
-
-            /* Ignore wild card and inalid domains */
-            if s_dom.contains("*") || s_dom.contains("\n") {
-                continue;
-            }
-            sub_domains.insert(s_dom.trim().to_string());
-        }
-    }
-
-    /* Ensure sub-domains have been found. */
-    return if sub_domains.is_empty() {
-        None
-    } else {
-        Some(sub_domains.into_iter().collect())
-    };
+    println!("{:?}", sub_domain_lookup::get("bbc.co.uk").unwrap());
 }
