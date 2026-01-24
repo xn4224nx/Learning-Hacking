@@ -8,12 +8,14 @@ fn main() {
     let scrape_url = String::from("https://crt.sh/?q=%25.bbc.co.uk&output=json");
 
     /* Get the raw request from the site. */
-    let req_result = reqwest::blocking::get(scrape_url).expect("Request failed to get a response!");
-    let req_body = req_result
-        .text()
-        .expect("Request failed to get a response!");
+    let req_body = web_get_txt(&scrape_url).unwrap();
 
     println!("{:?}", extract_subdomains(&req_body).unwrap());
+}
+
+/// Extract the raw text from a web request.
+fn web_get_txt(url: &str) -> Option<String> {
+    return Some(reqwest::blocking::get(url).ok()?.text().ok()?);
 }
 
 /// Take the raw body result and extract the subdomains
