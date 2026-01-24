@@ -210,4 +210,75 @@ mod test {
         ))
         .unwrap();
     }
+
+    #[test]
+    fn extract_subdomains_exp06() {
+        assert_eq!(
+            extract_subdomains(&String::from(
+                r###"[  {
+    "issuer_ca_id": 107462,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018",
+    "common_name": "*.myconnect.bbc.co.uk",
+    "name_value": "*.myconnect.bbc.co.uk\nmyconnect.bbc.co.uk",
+    "id": 2147644388,
+    "entry_timestamp": "2019-11-27T10:46:08.404",
+    "not_before": "2019-11-27T10:46:06",
+    "not_after": "2021-01-01T12:21:03",
+    "serial_number": "02fc19b7f8806c9d900854bd",
+    "result_count": 3
+  },  {
+    "issuer_ca_id": 9324,
+    "issuer_name": "C=US, O=Amazon, OU=Server CA 1B, CN=Amazon",
+    "common_name": "bobcat.sammg.cfp.ch.bbc.co.uk",
+    "name_value": "bobcat.sammg.cfp.ch.bbc.co.uk",
+    "id": 2150147737,
+    "entry_timestamp": "2019-11-27T11:42:38.081",
+    "not_before": "2019-11-27T00:00:00",
+    "not_after": "2020-12-27T12:00:00",
+    "serial_number": "0787c0dafc8b8f006be5480140f53a87",
+    "result_count": 2
+  }]"###
+            ))
+            .unwrap()
+            .into_iter()
+            .collect::<HashSet<String>>(),
+            HashSet::from(["bobcat.sammg.cfp.ch.bbc.co.uk".to_string()])
+        );
+    }
+
+    #[test]
+    fn extract_subdomains_exp07() {
+        assert_eq!(
+            extract_subdomains(&String::from(
+                r###"[  {
+    "issuer_ca_id": 9324,
+    "issuer_name": "C=US, O=Amazon, OU=Server CA 1B, CN=Amazon",
+    "common_name": "bobcat.pdn.cfp.ch.bbc.co.uk",
+    "name_value": "bobcat.pdn.cfp.ch.bbc.co.uk",
+    "id": 2140738312,
+    "entry_timestamp": "2019-11-22T10:13:20.319",
+    "not_before": "2019-11-22T00:00:00",
+    "not_after": "2020-12-22T12:00:00",
+    "serial_number": "0e93aeaac7deda50139b5f6013f094e5",
+    "result_count": 2
+  },
+  {
+    "issuer_ca_id": 107694,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign ECC OV SSL CA 2018",
+    "common_name": "*.bidi.net.uk",
+    "name_value": "*.bidi.live.bbc.co.uk\n*.sp.bidi.live.bbc.co.uk",
+    "id": 2140482913,
+    "entry_timestamp": "2019-11-22T08:26:05.384",
+    "not_before": "2019-11-22T08:26:03",
+    "not_after": "2020-11-22T08:26:03",
+    "serial_number": "60ef5ba1a3372300de6ba4de",
+    "result_count": 2
+  }]"###
+            ))
+            .unwrap()
+            .into_iter()
+            .collect::<HashSet<String>>(),
+            HashSet::from(["bobcat.pdn.cfp.ch.bbc.co.uk".to_string(),])
+        );
+    }
 }
