@@ -15,7 +15,7 @@ pub fn get(root_domain: &str) -> Option<Vec<String>> {
 }
 
 /// Take the raw body result and extract the subdomains
-pub fn extract_subdomains(raw_body: &String) -> Option<Vec<String>> {
+fn extract_subdomains(raw_body: &String) -> Option<Vec<String>> {
     let mut sub_domains = HashSet::new();
 
     /* Parse the raw text into a Json. */
@@ -42,4 +42,172 @@ pub fn extract_subdomains(raw_body: &String) -> Option<Vec<String>> {
     } else {
         Some(sub_domains.into_iter().collect())
     };
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn extract_subdomains_exp01() {
+        assert_eq!(
+            extract_subdomains(&String::from(
+                r###"[{
+    "issuer_ca_id": 107462,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018",
+    "common_name": "training.test.appsec.tools.bbc.co.uk",
+    "name_value": "training.test.appsec.tools.bbc.co.uk",
+    "id": 2140472224,
+    "entry_timestamp": "2019-11-22T08:21:05.796",
+    "not_before": "2019-11-22T08:21:04",
+    "not_after": "2020-11-22T08:21:04",
+    "serial_number": "46dce252667042c43e9b5c37",
+    "result_count": 2
+  }]"###
+            ))
+            .unwrap(),
+            vec!["training.test.appsec.tools.bbc.co.uk".to_string()]
+        );
+    }
+
+    #[test]
+    fn extract_subdomains_exp02() {
+        assert_eq!(
+            extract_subdomains(&String::from(
+                r###"[{
+    "issuer_ca_id": 107462,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018",
+    "common_name": "training.test.appsec.tools.bbc.co.uk",
+    "name_value": "training.test.appsec.tools.bbc.co.uk",
+    "id": 2140472224,
+    "entry_timestamp": "2019-11-22T08:21:05.796",
+    "not_before": "2019-11-22T08:21:04",
+    "not_after": "2020-11-22T08:21:04",
+    "serial_number": "46dce252667042c43e9b5c37",
+    "result_count": 2
+  },
+  {
+    "issuer_ca_id": 107462,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018",
+    "common_name": "training.appsec.tools.bbc.co.uk",
+    "name_value": "training.appsec.tools.bbc.co.uk",
+    "id": 2140460592,
+    "entry_timestamp": "2019-11-22T08:16:16.804",
+    "not_before": "2019-11-22T08:16:14",
+    "not_after": "2020-11-22T08:16:14",
+    "serial_number": "4ed82742e2267f3e5f61d19b",
+    "result_count": 2
+  }]"###
+            ))
+            .unwrap()
+            .into_iter()
+            .collect::<HashSet<String>>(),
+            HashSet::from([
+                "training.appsec.tools.bbc.co.uk".to_string(),
+                "training.test.appsec.tools.bbc.co.uk".to_string()
+            ])
+        );
+    }
+
+    #[test]
+    fn extract_subdomains_exp03() {
+        assert_eq!(
+            extract_subdomains(&String::from(
+                r###"[{
+    "issuer_ca_id": 107462,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018",
+    "name_value": "training.test.appsec.tools.bbc.co.uk",
+    "id": 2140472224,
+    "entry_timestamp": "2019-11-22T08:21:05.796",
+    "not_before": "2019-11-22T08:21:04",
+    "not_after": "2020-11-22T08:21:04",
+    "serial_number": "46dce252667042c43e9b5c37",
+    "result_count": 2
+  },
+  {
+    "issuer_ca_id": 107462,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018",
+    "name_value": "training.appsec.tools.bbc.co.uk",
+    "id": 2140460592,
+    "entry_timestamp": "2019-11-22T08:16:16.804",
+    "not_before": "2019-11-22T08:16:14",
+    "not_after": "2020-11-22T08:16:14",
+    "serial_number": "4ed82742e2267f3e5f61d19b",
+    "result_count": 2
+  }]"###
+            ))
+            .unwrap()
+            .into_iter()
+            .collect::<HashSet<String>>(),
+            HashSet::from([
+                "training.appsec.tools.bbc.co.uk".to_string(),
+                "training.test.appsec.tools.bbc.co.uk".to_string()
+            ])
+        );
+    }
+
+    #[test]
+    fn extract_subdomains_exp04() {
+        assert_eq!(
+            extract_subdomains(&String::from(
+                r###"[{
+    "issuer_ca_id": 107462,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018",
+    "common_name": "training.test.appsec.tools.bbc.co.uk",
+    "id": 2140472224,
+    "entry_timestamp": "2019-11-22T08:21:05.796",
+    "not_before": "2019-11-22T08:21:04",
+    "not_after": "2020-11-22T08:21:04",
+    "serial_number": "46dce252667042c43e9b5c37",
+    "result_count": 2
+  },
+  {
+    "issuer_ca_id": 107462,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018",
+    "common_name": "training.appsec.tools.bbc.co.uk",
+    "id": 2140460592,
+    "entry_timestamp": "2019-11-22T08:16:16.804",
+    "not_before": "2019-11-22T08:16:14",
+    "not_after": "2020-11-22T08:16:14",
+    "serial_number": "4ed82742e2267f3e5f61d19b",
+    "result_count": 2
+  }]"###
+            ))
+            .unwrap()
+            .into_iter()
+            .collect::<HashSet<String>>(),
+            HashSet::from([
+                "training.appsec.tools.bbc.co.uk".to_string(),
+                "training.test.appsec.tools.bbc.co.uk".to_string()
+            ])
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn extract_subdomains_exp05() {
+        extract_subdomains(&String::from(
+            r###"[{
+    "issuer_ca_id": 107462,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018",
+    "id": 2140472224,
+    "entry_timestamp": "2019-11-22T08:21:05.796",
+    "not_before": "2019-11-22T08:21:04",
+    "not_after": "2020-11-22T08:21:04",
+    "serial_number": "46dce252667042c43e9b5c37",
+    "result_count": 2
+  },
+  {
+    "issuer_ca_id": 107462,
+    "issuer_name": "C=BE, O=GlobalSign nv-sa, CN=GlobalSign RSA OV SSL CA 2018",
+    "id": 2140460592,
+    "entry_timestamp": "2019-11-22T08:16:16.804",
+    "not_before": "2019-11-22T08:16:14",
+    "not_after": "2020-11-22T08:16:14",
+    "serial_number": "4ed82742e2267f3e5f61d19b",
+    "result_count": 2
+  }]"###,
+        ))
+        .unwrap();
+    }
 }
