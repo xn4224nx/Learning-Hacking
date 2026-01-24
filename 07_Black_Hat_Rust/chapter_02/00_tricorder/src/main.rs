@@ -3,6 +3,7 @@
  */
 
 mod parse_args;
+mod scanner;
 mod sub_domain_lookup;
 
 fn main() {
