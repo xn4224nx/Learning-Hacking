@@ -25,8 +25,14 @@ fn find_open_ports(domain: &String, ports: &Vec<u16>) -> Vec<u16> {
     /* Resolve the Domain. */
     let mut addr: Vec<SocketAddr> = format!("{}:1042", domain)
         .to_socket_addrs()
-        .expect("Unable to resolve domain")
+        .unwrap_or("localhost:443".to_socket_addrs().unwrap())
         .collect();
+
+    /* Catch a failure to resolve the supplied domain. */
+    if addr[0] ==   SocketAddr::from(([127, 0, 0, 1], 443)) {
+        return Vec::new();
+    }
+
 
     /* Construct the socket connections and see if they are open.  */
     for prt_num in ports.iter() {
