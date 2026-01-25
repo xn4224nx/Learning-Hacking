@@ -2,14 +2,41 @@
  * Scanning functions that utalise a variety of methods to investigate domains.
  */
 
+const SCAN_DELAY_SEC: u64 = 3;
+
+use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
+use std::time::Duration;
+
 /// Determine via a simple tcp connect scan if a port is open.
-fn tcp_connect_port_scan(domain: &String, port: u16) -> bool {
-    false
+fn tcp_connect_port_scan(domain_port: &SocketAddr) -> bool {
+    return if let Ok(_) =
+        TcpStream::connect_timeout(domain_port, Duration::from_secs(SCAN_DELAY_SEC))
+    {
+        true
+    } else {
+        false
+    };
 }
 
 /// Test all the ports on a domain and find the open ones.
-fn all_open_ports(domain: &String) -> Vec<u16> {
-    Vec::new()
+fn find_open_ports(domain: &String, ports: &Vec<u16>) -> Vec<u16> {
+    let mut open_ports = Vec::new();
+
+    /* Resolve the Domain. */
+    let mut addr: Vec<SocketAddr> = format!("{}:1042", domain)
+        .to_socket_addrs()
+        .expect("Unable to resolve domain")
+        .collect();
+
+    /* Construct the socket connections and see if they are open.  */
+    for prt_num in ports.iter() {
+        addr[0].set_port(*prt_num);
+
+        if tcp_connect_port_scan(&addr[0]) {
+            open_ports.push(*prt_num);
+        }
+    }
+    return open_ports;
 }
 
 #[cfg(test)]
@@ -18,16 +45,26 @@ mod test {
 
     #[test]
     fn tcp_connect_port_scan_exp01() {
-        assert_eq!(tcp_connect_port_scan(&"bbc.co.uk".to_string(), 80), true);
+        let sock: Vec<_> = "bbc.co.uk:80".to_socket_addrs().unwrap().collect();
+        assert_eq!(tcp_connect_port_scan(&sock[0]), true);
     }
 
     #[test]
     fn tcp_connect_port_scan_exp02() {
-        assert_eq!(tcp_connect_port_scan(&"cnn.com".to_string(), 80), true);
+        let sock: Vec<_> = "cnn.com:80".to_socket_addrs().unwrap().collect();
+        assert_eq!(tcp_connect_port_scan(&sock[0]), true);
     }
 
     #[test]
-    fn all_open_ports_exp01() {
-        assert_eq!(all_open_ports(&"bbc.co.uk".to_string()), vec![80]);
+    fn find_open_ports_exp01() {
+        assert_eq!(
+            find_open_ports(&"bbc.co.uk".to_string(), &vec![80]),
+            vec![80]
+        );
+    }
+
+    #[test]
+    fn find_open_ports_exp02() {
+        assert_eq!(find_open_ports(&"cnn.com".to_string(), &vec![80]), vec![80]);
     }
 }
