@@ -29,10 +29,9 @@ fn find_open_ports(domain: &String, ports: &Vec<u16>) -> Vec<u16> {
         .collect();
 
     /* Catch a failure to resolve the supplied domain. */
-    if addr[0] ==   SocketAddr::from(([127, 0, 0, 1], 443)) {
+    if addr[0] == SocketAddr::from(([127, 0, 0, 1], 443)) {
         return Vec::new();
     }
-
 
     /* Construct the socket connections and see if they are open.  */
     for prt_num in ports.iter() {
