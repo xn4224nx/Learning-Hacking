@@ -44,6 +44,11 @@ fn find_open_ports(domain: &String, ports: &Vec<u16>) -> Vec<u16> {
     return open_ports;
 }
 
+/// Scan some of the most commonly used ports
+pub fn common_ports(domain: &String) -> Vec<u16> {
+    return find_open_ports(domain, &vec![7, 20, 21, 22, 80, 88]);
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
