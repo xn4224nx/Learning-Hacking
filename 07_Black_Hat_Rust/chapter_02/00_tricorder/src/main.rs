@@ -20,9 +20,9 @@ fn main() {
 
     /* Scan all the subdomains. */
     for sdom in subdomains.into_iter() {
-        print!("\t{} - ", sdom.to_ascii_uppercase());
+        print!("\t{: <50} - ", sdom.to_ascii_uppercase());
         let open_ports = scanner::common_ports(&sdom);
-        print!("{: <50}", open_ports.len());
+        print!("{}", open_ports.len());
         if !open_ports.is_empty() {
             println!(" - {:?}", open_ports);
         } else {
