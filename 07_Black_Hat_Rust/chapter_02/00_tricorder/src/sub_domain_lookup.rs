@@ -4,6 +4,21 @@
 
 use std::collections::HashSet;
 
+/// Keep attempting to get the subdomains.
+pub fn cont_get(root_domain: &str) -> Vec<String> {
+    let mut scan_delay: u64 = 1;
+
+    /* Keep trying until a response is recieved. */
+    loop {
+        let Some(sub_doms) = get(root_domain) else {
+            std::thread::sleep(std::time::Duration::from_secs(scan_delay));
+            scan_delay = scan_delay.wrapping_mul(2);
+            continue;
+        };
+        return sub_doms;
+    }
+}
+
 /// Use the site to get a distint list of sub-domains
 pub fn get(root_domain: &str) -> Option<Vec<String>> {
     return extract_subdomains(
